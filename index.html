@@ -5,38 +5,76 @@
 <title>Forge AI Risk Scorecard</title>
 <style>
   * { box-sizing: border-box }
-  body { margin: 0; background: white; color: #111; font: 14px/1.25 Arial, sans-serif }
-  main { position: relative; display: grid; grid-template-rows: minmax(0,1fr) auto; height: 100dvh }
-  #sheet, nav { overflow: auto }
-  #sheet { scrollbar-gutter: stable }
+  :root { --ink: #17263c; --muted: #4e6177; --teal: #00776d; --line: #d9e3ec; --paper: #fff }
+  body { margin: 0; background: #eaf0f5; color: var(--ink); font: 14px/1.25 Arial, sans-serif }
+  main { display: grid; grid-template-rows: auto minmax(0,1fr) auto; gap: 12px; height: 100dvh; padding: 0 14px 12px }
+  .masthead { display: flex; align-items: center; gap: 13px; min-width: 0; margin: 0 -14px;
+    padding: 14px 24px; color: white; background: linear-gradient(110deg,#101c2e 15%,#203854 73%,#16484d);
+    border-bottom: 2px solid #4fc0af; box-shadow: 0 5px 18px #152c4429 }
+  .mark { display:grid; place-items:center; flex:0 0 38px; width:38px; height:38px; border-radius:10px;
+    border:1px solid #7fd6c994; background:#2a62686b; color:#b7f8ed; font-size:19px; font-weight:700 }
+  .project { color: #b1ddd9; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase }
+  .masthead h1 { margin: 3px 0 0; font-size: clamp(17px, 2.25vw, 23px); line-height: 1.12 }
+  .workspace { position: relative; min-width: 0; min-height: 0; overflow: hidden; border: 1px solid var(--line);
+    border-radius: 12px; background: var(--paper); box-shadow: 0 8px 23px #223b5013 }
+  #sheet, nav { overflow: auto; scrollbar-color: #8da5b5 #eff4f8 }
+  #sheet { height: 100%; scrollbar-gutter: stable; overscroll-behavior: contain }
   #pane-divider { position: absolute; z-index: 10; top: 0; width: 11px; margin-left: -5px;
-    cursor: move; touch-action: none; background: linear-gradient(90deg, transparent 4px, #c7c7c7 4px 7px, transparent 7px) }
+    cursor: move; touch-action: none; background: linear-gradient(90deg, transparent 4px, #7897a9 4px 7px, transparent 7px) }
+  #pane-divider::after { content:''; position:absolute; top:50%; left:50%; width:13px; height:30px;
+    transform:translate(-50%,-50%); border:1px solid #587e8d; border-radius:7px; pointer-events:none;
+    background: radial-gradient(circle,#526d7e 1px,transparent 1.6px) center / 5px 5px, #eef5f7 }
   #pane-divider:hover, #pane-divider:focus-visible, #pane-divider.dragging {
-    background: linear-gradient(90deg, transparent 4px, #217346 4px 7px, transparent 7px) }
-  nav { display: flex; background: #f3f3f3; border-top: 1px solid #bbb; padding: 4px 8px; gap: 3px }
-  button { white-space: nowrap; padding: 6px 12px; border: 1px solid transparent; background: transparent; font: inherit; cursor: pointer }
-  button[aria-selected=true] { border-color: #ccc; border-bottom: 2px solid #217346; background: white; font-weight: bold }
+    background: linear-gradient(90deg, transparent 4px, var(--teal) 4px 7px, transparent 7px) }
+  nav { display: flex; min-width: 0; background: #f7fafc; border: 1px solid var(--line);
+    border-radius: 11px; padding: 6px; gap: 4px; box-shadow: 0 3px 10px #223b5010 }
+  button { flex-shrink: 0; white-space: nowrap; padding: 8px 13px; border: 1px solid transparent; border-radius: 7px;
+    color: var(--muted); background: transparent; font: inherit; font-weight: 600; cursor: pointer }
+  button:hover { color: var(--ink); background: #eaf1f6 }
+  button[aria-selected=true] { border-color: #b2ddd4; background: #e1f6f1; color: #065c53; box-shadow: inset 0 -2px #168a7c }
+  :focus-visible { outline: 2px solid var(--teal); outline-offset: -2px }
   table { table-layout: fixed; border-spacing: 0; empty-cells: show }
   th, td { padding: 2px 4px; overflow-wrap: anywhere; background: white }
-  th { background: #f3f3f3; color: #444; font-weight: normal; border: 1px solid #ddd }
+  th { background: #eff4f8; color: var(--muted); font-weight: normal; border: 1px solid #e1e9ef }
   td { white-space: pre-wrap; vertical-align: bottom }
-  .grid td { border-right: 1px solid #ddd; border-bottom: 1px solid #ddd }
+  .grid td { border-right: 1px solid #e4ebf1; border-bottom: 1px solid #e4ebf1 }
   .pinned { position: sticky; z-index: 2 }
   .pinned.both { z-index: 3 }
-  .freeze-bottom { box-shadow: inset 0 -3px #c2c2c2 }
+  .freeze-bottom { box-shadow: inset 0 -3px #8fa8b9 }
   .note-text { white-space: pre-wrap; overflow-wrap: anywhere }
   .sticky-note { position: sticky }
   .scorecard td { padding: 1px 2px }
-  .scorecard th { border: 0; background: #fafafa }
+  .scorecard th { border: 0; background: #eff4f8 }
+  .scorecard tr:nth-child(even):nth-child(n+6) td { background: #f6f9fc }
+  .risk-result { display:inline-block; max-width:100%; padding: 4px 7px; border-radius: 6px;
+    border:1px solid #c6dedb; background:#eaf5f2; color:#135b54; font-weight:700 }
+  .risk-result.high, .risk-result.hold { border-color:#ecd6a0; background:#fff5db; color:#714500 }
+  .risk-result.critical, .risk-result.stop { border-color:#ebbac0; background:#fff0f1; color:#94293b }
   .scorecard tr:first-child td, .scorecard tr:first-child th { padding: 0; }
   .scorecard tr:first-child div { min-height: 0 }
   a { color: inherit }
-  td:focus-within, td:target { outline: 2px solid #217346; outline-offset: -2px }
+  a:hover { text-decoration-thickness: 2px }
+  td:focus-within, td:target { outline: 2px solid var(--teal); outline-offset: -2px }
   .choice { position: relative; width: 100%; padding-right: 13px }
   .choice::after { content: '▾'; position: absolute; right: 3px; top: 50%; transform: translateY(-50%); color: #806a16; pointer-events: none }
   .choice select { position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer }
+  @media (max-width: 600px) {
+    main { gap: 7px; padding: 0 6px 6px }
+    .masthead { margin: 0 -6px; padding: 9px 12px }
+    .workspace, nav { border-radius: 8px }
+  }
 </style>
-<main><div id="sheet" tabindex="0" aria-label="Worksheet">Loading scorecard…</div><div id="pane-divider" role="separator" aria-orientation="vertical" aria-label="Drag or use arrow keys to scroll the worksheet" tabindex="0" hidden></div><nav role="tablist" aria-label="Worksheets"></nav></main>
+<main>
+  <header class="masthead">
+    <span class="mark" aria-hidden="true">F</span>
+    <div><div class="project">Forge Chicago LEAD</div><h1>Forge AI Risk Scorecard</h1></div>
+  </header>
+  <section class="workspace" aria-label="Workbook">
+    <div id="sheet" tabindex="0" aria-label="Worksheet">Loading scorecard…</div>
+    <div id="pane-divider" role="separator" aria-orientation="vertical" aria-label="Drag or use arrow keys to scroll the worksheet" tabindex="0" hidden></div>
+  </section>
+  <nav role="tablist" aria-label="Worksheets"></nav>
+</main>
 <script id="workbook" type="application/octet-stream">
 H4sIAAAAAAACCuS9e3PiSrLo+1U0njh7ZuJgjN4SffdegQHb+N3d7udMxwoZZFurATEIutuz746Y77DPPzfi3i83n+RWZpVeWKhS
 IJvV50zEsNqQqirVM/NXWVn/uRc9+P4i2mv/597bYTj3h958BH8M/fEYv+2oe+2/TpfjcaPVwP/sHftTf+6N9/ifd9448r809g6J
@@ -1282,6 +1320,15 @@ function launch(book) {
             const update = () => {
               const value = currentValue(addr);
               cell.textContent = formatted(value, fmt);
+              if (scorecard && r >= 6 && (c === 18 || c === 21) && typeof value === 'string') {
+                const status = value.split(' ', 1)[0].toLowerCase();
+                if ((c === 18 && ['low', 'moderate', 'high', 'critical'].includes(status)) ||
+                    (c === 21 && ['hold', 'stop'].includes(status))) {
+                  const badge = el('span', cell.textContent);
+                  badge.className = 'risk-result ' + status;
+                  cell.replaceChildren(badge);
+                }
+              }
               cell.style.textAlign = cell.style.textAlign || (isNumber(value) ? 'right' : '');
               const rule = conditional.find(([area, type, match]) => area.has(addr) &&
                 (type === 'cellIs' ? value === match : String(value).includes(match)));
