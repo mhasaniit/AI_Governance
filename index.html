@@ -11,11 +11,9 @@
   .masthead { display: flex; align-items: center; gap: 13px; min-width: 0; margin: 0 -14px;
     padding: 14px 24px; color: white; background: linear-gradient(110deg,#101c2e 15%,#203854 73%,#16484d);
     border-bottom: 2px solid #4fc0af; box-shadow: 0 5px 18px #152c4429 }
-  .mark { display:grid; place-items:center; flex:0 0 38px; width:38px; height:38px; border-radius:10px;
-    border:1px solid #7fd6c994; background:#2a62686b; color:#b7f8ed; font-size:19px; font-weight:700 }
   .project { color: #b1ddd9; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase }
   .masthead h1 { margin: 3px 0 0; font-size: clamp(17px, 2.25vw, 23px); line-height: 1.12 }
-  .masthead-title { display: grid; grid-template-columns: 38px minmax(0,1fr) 38px; align-items: center; gap: 13px; width: 100%; text-align: center }
+  .masthead-title { width: 100%; text-align: center }
   .credits { margin: 7px 0 0; color: #fff; font-size: 14px; line-height: 1.4 }
   .credits strong { color: #b7f8ed; margin-right: 4px }
   .workspace { position: relative; min-width: 0; min-height: 0; overflow: hidden; border: 1px solid var(--line);
@@ -64,15 +62,12 @@
   @media (max-width: 600px) {
     main { gap: 7px; padding: 0 6px 6px }
     .masthead { margin: 0 -6px; padding: 9px 12px }
-    .masthead-title { grid-template-columns: minmax(0,1fr); gap: 0 }
-    .masthead-title .mark { display: none }
     .workspace, nav { border-radius: 8px }
   }
 </style>
 <main>
   <header class="masthead">
     <div class="masthead-title">
-      <span class="mark" aria-hidden="true">F</span>
       <div>
         <div class="project">Forge Chicago LEAD</div>
         <h1>AI Use Case Risk Scorecard</h1>
