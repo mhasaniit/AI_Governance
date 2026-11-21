@@ -15,7 +15,7 @@
     border:1px solid #7fd6c994; background:#2a62686b; color:#b7f8ed; font-size:19px; font-weight:700 }
   .project { color: #b1ddd9; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase }
   .masthead h1 { margin: 3px 0 0; font-size: clamp(17px, 2.25vw, 23px); line-height: 1.12 }
-  .masthead-title { display: flex; align-items: center; gap: 13px }
+  .masthead-title { display: grid; grid-template-columns: 38px minmax(0,1fr) 38px; align-items: center; gap: 13px; width: 100%; text-align: center }
   .credits { margin: 7px 0 0; color: #fff; font-size: 14px; line-height: 1.4 }
   .credits strong { color: #b7f8ed; margin-right: 4px }
   .workspace { position: relative; min-width: 0; min-height: 0; overflow: hidden; border: 1px solid var(--line);
@@ -29,7 +29,7 @@
     background: radial-gradient(circle,#526d7e 1px,transparent 1.6px) center / 5px 5px, #eef5f7 }
   #pane-divider:hover, #pane-divider:focus-visible, #pane-divider.dragging {
     background: linear-gradient(90deg, transparent 4px, var(--teal) 4px 7px, transparent 7px) }
-  nav { display: flex; min-width: 0; background: #f7fafc; border: 1px solid var(--line);
+  nav { display: flex; justify-content: safe center; min-width: 0; background: #f7fafc; border: 1px solid var(--line);
     border-radius: 11px; padding: 6px; gap: 4px; box-shadow: 0 3px 10px #223b5010 }
   button { flex-shrink: 0; white-space: nowrap; padding: 8px 13px; border: 1px solid transparent; border-radius: 7px;
     color: var(--muted); background: transparent; font: inherit; font-weight: 600; cursor: pointer }
@@ -64,6 +64,8 @@
   @media (max-width: 600px) {
     main { gap: 7px; padding: 0 6px 6px }
     .masthead { margin: 0 -6px; padding: 9px 12px }
+    .masthead-title { grid-template-columns: minmax(0,1fr); gap: 0 }
+    .masthead-title .mark { display: none }
     .workspace, nav { border-radius: 8px }
   }
 </style>
