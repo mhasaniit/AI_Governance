@@ -6,75 +6,26 @@
 <style>
   * { box-sizing: border-box }
   :root { --ink: #17263c; --muted: #4e6177; --teal: #00776d; --line: #d9e3ec; --paper: #fff }
-  body { margin: 0; background: #eaf0f5; color: var(--ink); font: 14px/1.25 Arial, sans-serif }
+  body { margin: 0; background: #eaf0f5; color: var(--ink); font: 17px/1.5 Arial, sans-serif }
   main { display: grid; grid-template-rows: auto minmax(0,1fr) auto; gap: 12px; height: 100dvh; padding: 0 14px 12px }
   .masthead { display: flex; align-items: center; gap: 13px; min-width: 0; margin: 0 -14px;
     padding: 14px 24px; color: white; background: linear-gradient(110deg,#101c2e 15%,#203854 73%,#16484d);
     border-bottom: 2px solid #4fc0af; box-shadow: 0 5px 18px #152c4429 }
   .project { color: #b1ddd9; font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase }
-  .masthead h1 { margin: 3px 0 0; font-size: clamp(17px, 2.25vw, 23px); line-height: 1.12 }
+  .masthead h1 { margin: 3px 0 0; font-size: clamp(23px, 3vw, 32px); line-height: 1.12 }
   .masthead-title { width: 100%; text-align: center }
-  .credits { margin: 7px 0 0; color: #fff; font-size: 14px; line-height: 1.4 }
+  .credits { margin: 7px 0 0; color: #fff; font-size: 15px; line-height: 1.4 }
   .credits strong { color: #b7f8ed; margin-right: 4px }
-  .workspace { position: relative; min-width: 0; min-height: 0; overflow: hidden; border: 1px solid var(--line);
-    border-radius: 12px; background: var(--paper); box-shadow: 0 8px 23px #223b5013 }
-  #sheet, nav { overflow: auto; scrollbar-color: #8da5b5 #eff4f8 }
-  #sheet { height: 100%; scrollbar-gutter: stable; overscroll-behavior: contain }
-  #pane-divider { position: absolute; z-index: 10; top: 0; width: 11px; margin-left: -5px;
-    cursor: move; touch-action: none; background: linear-gradient(90deg, transparent 4px, #7897a9 4px 7px, transparent 7px) }
-  #pane-divider::after { content:''; position:absolute; top:50%; left:50%; width:13px; height:30px;
-    transform:translate(-50%,-50%); border:1px solid #587e8d; border-radius:7px; pointer-events:none;
-    background: radial-gradient(circle,#526d7e 1px,transparent 1.6px) center / 5px 5px, #eef5f7 }
-  #pane-divider:hover, #pane-divider:focus-visible, #pane-divider.dragging {
-    background: linear-gradient(90deg, transparent 4px, var(--teal) 4px 7px, transparent 7px) }
-  nav { display: flex; justify-content: safe center; min-width: 0; background: #f7fafc; border: 1px solid var(--line);
-    border-radius: 11px; padding: 6px; gap: 4px; box-shadow: 0 3px 10px #223b5010 }
-  button { flex-shrink: 0; white-space: nowrap; padding: 8px 13px; border: 1px solid transparent; border-radius: 7px;
-    color: var(--muted); background: transparent; font: inherit; font-weight: 600; cursor: pointer }
-  button:hover { color: var(--ink); background: #eaf1f6 }
-  button[aria-selected=true] { border-color: #b2ddd4; background: #e1f6f1; color: #065c53; box-shadow: inset 0 -2px #168a7c }
-  :focus-visible { outline: 2px solid var(--teal); outline-offset: -2px }
-  table { table-layout: fixed; border-spacing: 0; empty-cells: show }
-  th, td { padding: 2px 4px; overflow-wrap: anywhere; background: white }
-  th { background: #eff4f8; color: var(--muted); font-weight: normal; border: 1px solid #e1e9ef }
-  td { white-space: pre-wrap; vertical-align: bottom }
-  .grid td { border-right: 1px solid #e4ebf1; border-bottom: 1px solid #e4ebf1 }
-  .pinned { position: sticky; z-index: 2 }
-  .pinned.both { z-index: 3 }
-  .freeze-bottom { box-shadow: inset 0 -3px #8fa8b9 }
-  .note-text { white-space: pre-wrap; overflow-wrap: anywhere }
-  .sticky-note { position: sticky }
-  .scorecard td { padding: 1px 2px }
-  .scorecard th { border: 0; background: #eff4f8 }
-  .scorecard tr:nth-child(even):nth-child(n+6) td { background: #f6f9fc }
-  .risk-result { display:inline-block; max-width:100%; padding: 4px 7px; border-radius: 6px;
-    border:1px solid #c6dedb; background:#eaf5f2; color:#135b54; font-weight:700 }
-  .risk-result.high, .risk-result.hold { border-color:#ecd6a0; background:#fff5db; color:#714500 }
-  .risk-result.critical, .risk-result.stop { border-color:#ebbac0; background:#fff0f1; color:#94293b }
-  .scorecard tr:first-child td, .scorecard tr:first-child th { padding: 0; }
-  .scorecard tr:first-child div { min-height: 0 }
-  a { color: inherit }
-  a:hover { text-decoration-thickness: 2px }
-  td:focus-within, td:target { outline: 2px solid var(--teal); outline-offset: -2px }
-  .choice { position: relative; width: 100%; padding-right: 13px }
-  .choice::after { content: '▾'; position: absolute; right: 3px; top: 50%; transform: translateY(-50%); color: #806a16; pointer-events: none }
-  .choice select { position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer }
-  @media (max-width: 600px) {
-    main { gap: 7px; padding: 0 6px 6px }
-    .masthead { margin: 0 -6px; padding: 9px 12px }
-    .workspace, nav { border-radius: 8px }
-  }
+  button { border:1px solid transparent; border-radius:8px; padding:10px 13px;
+    background:transparent; color:#36546c; font:inherit; font-weight:700; cursor:pointer }
+  button:hover { background:#eaf1f6; color:var(--ink) }
+  :focus-visible { outline:2px solid var(--teal); outline-offset:2px }
 </style>
 <style>
   main { display:flex; flex-direction:column; gap:0; padding:0; }
   .masthead { flex:none; margin:0 }
-  .mode-bar { display:flex; justify-content:center; gap:6px; padding:8px; background:white; border-bottom:1px solid var(--line) }
-  .mode-bar a { padding:8px 14px; border-radius:8px; color:#36546c; text-decoration:none; font-weight:700 }
-  .mode-bar a[aria-current] { background:#e1f6f1; color:#065c53 }
-  #assessment { overflow:auto; min-height:0; flex:1; padding:24px clamp(12px,4vw,56px) }
-  #assessment[hidden], #references[hidden] { display:none }
-  #references { flex:1; min-height:0; display:grid; grid-template-rows:minmax(0,1fr) auto; padding:12px; gap:10px }
-  .assessment-layout { max-width:1200px; margin:auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:22px; align-items:start }
+  #assessment { overflow:auto; min-height:0; flex:1; padding:26px clamp(12px,4vw,56px); }
+  .assessment-layout { max-width:1200px; margin:auto; display:grid; grid-template-columns:250px minmax(0,1fr); gap:22px; align-items:start }
   .assessment-intro { grid-column:1/-1; border:1px solid #315b70; border-radius:16px;
     padding:22px clamp(16px,3vw,32px); color:#fff; background:linear-gradient(112deg,#162840,#244564 68%,#176361); }
   .assessment-intro h2 { font-size:clamp(24px,4vw,36px); letter-spacing:-.025em; margin-bottom:6px }
@@ -82,9 +33,6 @@
   .assessment-intro ul { list-style:none; padding:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:17px 0 12px }
   .assessment-intro li { border:1px solid #d7f1f755; border-radius:10px; padding:11px 13px; background:#ffffff12 }
   .assessment-intro li span { display:block; margin-top:4px; color:#e4f3f5; line-height:1.35 }
-  .assessment-about { color:#def9f4 }
-  .assessment-about summary { cursor:pointer }
-  .assessment-about a { color:#c4fff4 }
   .assessment-layout h2,.assessment-layout h3 { margin:0 0 12px }
   .assessment-layout p { line-height:1.5 }
   .assessment-side,.assessment-card { min-width:0; padding:18px; border:1px solid var(--line); border-radius:14px; background:white; box-shadow:0 5px 18px #17263c0c }
@@ -104,7 +52,7 @@
   .answer-grid,.result-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px }
   .answer,.result-box { min-width:0; overflow-wrap:anywhere }
   .answer { padding:12px; border:1px solid #e2eaf0; border-radius:10px }
-  .option-meaning { color:#355465; margin:6px 0 0; font-size:13px }
+  .option-meaning { color:#355465; margin:6px 0 0; font-size:15px }
   .assessment-footer { display:flex; gap:8px; justify-content:space-between; flex-wrap:wrap; margin-top:20px }
   .assessment-primary { background:#00695f; color:white }
   .assessment-primary:hover { background:#00574e; color:white }
@@ -114,8 +62,8 @@
   .result-box dd { margin:5px 0 0 }
   .period { margin-top:12px; padding:12px; border:1px solid var(--line); border-radius:10px }
   .period > .answer-grid { margin-top:12px }
-  @media(max-width:720px) { .assessment-layout,.answer-grid,.result-grid,.assessment-intro ul { grid-template-columns:1fr } .step-list { grid-template-columns:repeat(2,minmax(0,1fr)) } .credits { font-size:12px } }
-  @media print { .mode-bar,.assessment-side,.assessment-footer { display:none } main,#assessment { display:block; height:auto; overflow:visible } .assessment-layout { display:block } }
+  @media(max-width:720px) { .assessment-layout,.answer-grid,.result-grid,.assessment-intro ul { grid-template-columns:1fr } .step-list { grid-template-columns:repeat(2,minmax(0,1fr)) } .credits { font-size:14px } }
+  @media print { .assessment-side,.assessment-footer { display:none } main,#assessment { display:block; height:auto; overflow:visible } .assessment-layout { display:block } }
 </style>
 <main>
   <header class="masthead">
@@ -127,13 +75,7 @@
       </div>
     </div>
   </header>
-  <div class="mode-bar"><a href="#assessment">Guided assessment</a><a href="#reference">Workbook library</a></div>
   <section id="assessment" aria-label="Guided assessment">Loading assessment…</section>
-  <div id="references" hidden><section class="workspace" aria-label="Workbook">
-    <div id="sheet" tabindex="0" aria-label="Worksheet">Loading scorecard…</div>
-    <div id="pane-divider" role="separator" aria-orientation="vertical" aria-label="Drag or use arrow keys to scroll the worksheet" tabindex="0" hidden></div>
-  </section>
-  <nav role="tablist" aria-label="Worksheets"></nav></div>
 </main>
 <script id="workbook" type="application/octet-stream">
 H4sIAAAAAAACCuS9+3LjOnbw+yocp5KZ1Ce7DfCuPidTat/vktrt3r3z7UrJEm1zWhY1otS9PTmpmnfI+ee83jzJwY0XySSwSEKS
@@ -1841,13 +1783,13 @@ function mountAssessment(source) {
   const host = document.querySelector('#assessment');
   const sheets = source.sheets;
   const steps = [
-    ['Identify the use case', 'Start with a unique ID, a name, and an accountable business owner.'],
-    ['Rate inherent risk', 'Choose the closest description for each of the eight risk dimensions.'],
-    ['Check policy and safeguards', 'Answer the override and policy questions, then document the checks and supporting evidence.'],
-    ['Document scope and value', 'Describe the system boundaries, affected population, expected value, and evidence.'],
+    ['Identify the use case', 'Enter a unique use case ID, a short name, and the person accountable for the use case.'],
+    ['Rate inherent risk', 'Choose the description that best fits the use case for each of the eight risk dimensions.'],
+    ['Check policy and safeguards', 'Answer the policy and override questions. Document any safeguards you have verified and the evidence that supports them.'],
+    ['Document scope and value', 'Describe where the AI will be used, who it affects, and how you will measure its value.'],
     ['Assess readiness', 'Rate privacy and security risk, then assess adoption and operational readiness.'],
     ['Estimate three-year economics', 'Use one currency throughout. Enter explicit zeroes where a category has no cost or benefit.'],
-    ['Review results', 'Use the workbook’s routing recommendation and control requirements to plan the next review.'],
+    ['Review results', 'Review the risk tier, recommended reviewers, and controls before deciding what to do next.'],
     ['Record follow-up', 'Capture an agreed action and its verification evidence.']
   ];
   const fieldSets = [
@@ -1870,6 +1812,22 @@ function mountAssessment(source) {
   const formStepByColumn = new Map(fieldSets.flatMap((groups,i)=>groups
     .filter(([name])=>name==='Scorecard')
     .flatMap(([,cols])=>cols.split(' ').map(col=>[col,i]))));
+  const fieldLabels = new Map([
+    ['Scorecard!A','Use case ID'],['Scorecard!B','Use case name'],['Scorecard!C','Business owner'],
+    ['Scorecard!N','Does AI make consequential decisions automatically?'],
+    ['Scorecard!O','Is personal or regulated data sent to an external API?'],
+    ['Scorecard!P','Is this use prohibited?'],
+    ['Scorecard!T','Data and platform policy status'],
+    ['Scorecard!V','Evidence or scope reference'],
+    ['Intake!E','Industry and jurisdictions'],['Intake!F','Model, provider, or platform'],
+    ['Intake!I','Data flows and tool permissions'],
+    ['Intake!AC','Does this affect a vulnerable or regulated group?'],
+    ['Readiness!M','Reviewer or accountable owner'],
+    ['Readiness!N','Evidence and gaps by dimension'],
+    ['ROI 3yr!D','Finance or benefit owner'],['ROI 3yr!E','Assumptions and sources'],
+    ['ROI 3yr!L','Minimum required ROI (optional)'],
+    ['ROI 3yr!P','Basis and evidence for this period']
+  ]);
   const studies = new Map();
   let active = 'new', step = 0;
   const el = (tag, value, cls) => {
@@ -1930,24 +1888,18 @@ function mountAssessment(source) {
   }
   const layout = el('div',undefined,'assessment-layout');
   const intro = el('section',undefined,'assessment-intro');
-  intro.append(el('h2','Assess an AI use case'),el('p','Answer questions about how the system will be used, who it affects, and what safeguards are in place. The scorecard calculates a risk tier and recommends what to do next.'));
+  intro.append(el('h2','Assess an AI use case'),el('p','Use this scorecard to decide what review an AI use case needs. Start with your own case or choose a worked example. Open Field help for definitions, examples, and guidance as you go.'));
   const introPoints = el('ul');
   for(const [title,copy] of [
-    ['Risk and safeguards','Rate eight risk dimensions and check policy overrides.'],
-    ['Readiness and economics','Assess privacy, security, adoption, operations, and three-year ROI.'],
-    ['Results and follow-up','See the review route, relevant controls, and gaps to resolve.']
+    ['Understand the risk','Describe your use case, rate its risks, and check policy and safeguards.'],
+    ['Check readiness and value','Assess privacy, security, adoption, and operations. Enter estimates for three-year ROI.'],
+    ['Get a recommendation','See the risk tier, who should review the case, and what to address before proceeding.']
   ]) {
     const item=el('li');
     item.append(el('strong',title),el('span',copy));
     introPoints.append(item);
   }
-  const about=el('details',undefined,'assessment-about');
-  about.append(el('summary','About this scorecard'));
-  for(const addr of ['A1','A2','A3','A4']) about.append(el('p',sheets.Scorecard.cells[addr][0]));
-  const gettingStarted = el('a','Read the full Guide');
-  gettingStarted.href='#Guide';
-  about.append(gettingStarted);
-  intro.append(introPoints,about);
+  intro.append(introPoints);
   const sidebar = el('aside',undefined,'assessment-side');
   const page = el('div',undefined,'assessment-card');
   const progress = el('div',undefined,'step-list');
@@ -1978,8 +1930,8 @@ function mountAssessment(source) {
     const options = book.sheets[sheet].validations[col+row];
     const {label} = header(sheet,col,headerRow);
     const shell = el('div',undefined,'answer');
-    const caption = el('label',label);
     const key = sheet+'!'+col;
+    const caption = el('label', fieldLabels.get(key) ?? label);
     const isDate = dateFields.has(key);
     const isNumberInput = options==='nonnegative' || numericFields.has(key);
     const isPercentage = key==='ROI 3yr!L';
@@ -2025,6 +1977,20 @@ function mountAssessment(source) {
     shell.append(caption,input,hint);
     const help=guideFor(sheet,col,headerRow);
     if(help) shell.append(help);
+    if (sheet==='Scorecard' && index(col)>=4 && index(col)<=11 && active!=='new') {
+      const records=sheets.Evidence.cells;
+      const evidenceRow=6+(Number(active)-6)*8+index(col)-4;
+      if(records['A'+evidenceRow]?.[0]===sheets.Scorecard.cells['A'+active][0]) {
+        const evidence=el('details');
+        evidence.append(el('summary','Evidence for this example'));
+        for(const [label,letter] of [['Workbook rationale','D'],['Evidence needed','E'],['Status','F']]) {
+          const line=el('p');
+          line.append(el('strong',label+' '),document.createTextNode(records[letter+evidenceRow][0]));
+          evidence.append(line);
+        }
+        shell.append(evidence);
+      }
+    }
     return shell;
   }
   function gridFor(groups,row,headerRow=5) {
@@ -2102,10 +2068,21 @@ function mountAssessment(source) {
     };
     resultPreview();
     page.replaceChildren(heading,el('p',steps[step][1]),live);
-    if(step===4) {
-      for(const [label,cols] of [['Privacy and security','B C'],['Adoption','D E F G'],['Operations','H I J K L'],['Review evidence','M N O']]) {
+    const groups = {
+      2: [['Policy checks and overrides','Scorecard','N O P T'],
+          ['Safeguards and accountability','Intake','H I O P Q R S T U V'],
+          ['Assessment record','Scorecard','V W X Y']],
+      3: [['Expected value and timing','Intake','J K L M N'],
+          ['Population and exposure','Intake','Y Z AA AC AD AF'],
+          ['Scope, impact, and value evidence','Use Cases','C E F G H I J L M N O R S T'],
+          ['Data governance and operations','Use Cases','U V W X Y Z AA AB AC']],
+      4: [['Privacy and security','Readiness','B C'],['Adoption','Readiness','D E F G'],
+          ['Operations','Readiness','H I J K L'],['Review evidence','Readiness','M N O']]
+    }[step];
+    if(groups) {
+      for(const [label,sheet,cols] of groups) {
         const group=el('section',undefined,'period');
-        group.append(el('h3',label),gridFor([['Readiness',cols]],row));
+        group.append(el('h3',label),gridFor([[sheet,cols]],row));
         page.append(group);
       }
     } else if(fieldSets[step].length) page.append(gridFor(fieldSets[step],row));
@@ -2161,260 +2138,13 @@ function mountAssessment(source) {
 }
 
 function launch(book) {
-  const focusAssessment = mountAssessment(structuredClone(book));
-  const sheetView = document.querySelector('#sheet');
-  const divider = document.querySelector('#pane-divider');
-  const nav = document.querySelector('nav');
-  const positions = new Map(), tabs = new Map();
-  let current;
-  let drag;
-  divider.addEventListener('pointerdown', event => {
-    if (event.button !== 0) return;
-    divider.setPointerCapture(event.pointerId);
-    drag = {x: event.clientX, y: event.clientY, left: sheetView.scrollLeft, top: sheetView.scrollTop};
-    divider.classList.add('dragging');
-  });
-  divider.addEventListener('pointermove', event => {
-    if (!drag) return;
-    sheetView.scrollTo(drag.left + event.clientX - drag.x, drag.top + event.clientY - drag.y);
-  });
-  divider.addEventListener('lostpointercapture', () => {
-    drag = null;
-    divider.classList.remove('dragging');
-  });
-  divider.addEventListener('wheel', event => {
-    event.preventDefault();
-    const step = [1, 16, sheetView.clientHeight][event.deltaMode] || 1;
-    sheetView.scrollBy((event.shiftKey ? event.deltaY : event.deltaX) * step,
-      event.shiftKey ? 0 : event.deltaY * step);
-  }, {passive: false});
-  divider.addEventListener('keydown', event => {
-    const direction = {ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1]}[event.key];
-    if (!direction) return;
-    event.preventDefault();
-    sheetView.scrollBy(direction[0] * 70, direction[1] * 70);
-  });
-  let read = calculate(book);
-  const el = (name, text) => {
-    const node = document.createElement(name);
-    if (text !== undefined) node.textContent = text;
-    return node;
-  };
-  function show(name, destination) {
-    if (current) positions.set(current, [sheetView.scrollLeft, sheetView.scrollTop]);
-    current = name;
-    for (const [label, button] of tabs) button.setAttribute('aria-selected', String(label === name));
-    const sheet = book.sheets[name], table = el('table');
-    const scorecard = name === 'Scorecard';
-    table.className = [sheet.grid ? 'grid' : '', scorecard ? 'scorecard' : ''].join(' ');
-    const widths = [scorecard ? 10 : 34, ...sheet.widths.map(w => Math.floor(w * 6))];
-    const heights = [scorecard ? 0 : 22, ...sheet.heights];
-    if (scorecard && Object.entries(sheet.cells).every(([address, cell]) => !/^[A-Z]+1$/.test(address) || cell[0] === null)) {
-      heights[1] = 2;
-    }
-    const [, freezeCol, freezeRow] = /^([A-Z]+)(\d+)$/.exec(sheet.freeze || 'A1');
-    const frozenX = index(freezeCol), frozenY = +freezeRow;
-    const prefix = (sizes, n) => sizes.slice(0, n).reduce((a, b) => a + b, 0);
-    if (sheet.widths.length <= 6 || name === 'Rubric') {
-      const minimumWidth = name === 'Rubric' ? 990 : 660;
-      const available = Math.max(minimumWidth, sheetView.clientWidth) - widths[0];
-      const ratio = Math.min(1, available / (prefix(widths, widths.length) - widths[0]));
-      for (let c = 1; c < widths.length; c++) widths[c] = Math.floor(widths[c] * ratio);
-    }
-    const frozenWidth = prefix(widths, frozenX);
-    const maxFrozenWidth = Math.max(widths[0], Math.floor(sheetView.clientWidth * 0.55));
-    if (frozenWidth > maxFrozenWidth) {
-      const ratio = (maxFrozenWidth - widths[0]) / (frozenWidth - widths[0]);
-      for (let c = 1; c < frozenX; c++) widths[c] = Math.max(1, Math.floor(widths[c] * ratio));
-    }
-    const columnGroup = el('colgroup');
-    table.style.width = prefix(widths, widths.length) + 'px';
-    for (const width of widths) {
-      const col = el('col');
-      col.style.width = width + 'px';
-      columnGroup.append(col);
-    }
-    table.append(columnGroup);
-    const mergeStarts = new Map(), covered = new Set();
-    for (const area of sheet.merges) {
-      const rows = range(area), origin = rows[0][0];
-      mergeStarts.set(origin, [rows.length, rows[0].length]);
-      for (const cell of rows.flat()) if (cell !== origin) covered.add(cell);
-    }
-    // An unwrapped workbook label can extend through adjacent empty cells.
-    // Give that text real layout space so increasing the type can grow the row.
-    const notes = new Set();
-    for (let r = 1; r < heights.length; r++) {
-      for (let c = 1; c < widths.length; c++) {
-        const address = column(c) + r;
-        const [text, style, formula, , , wraps] = sheet.cells[address];
-        if (typeof text !== 'string' || !text || formula || wraps || covered.has(address) ||
-            mergeStarts.has(address) || sheet.validations[address] ||
-            (c !== 1 && !(name === 'Rubric' && address === 'H4'))) continue;
-        let end = c + 1;
-        while (end < widths.length) {
-          const next = column(end) + r;
-          const [value, otherStyle, otherFormula, , comment] = sheet.cells[next];
-          if (value !== null || otherFormula || comment || covered.has(next) || mergeStarts.has(next) ||
-              sheet.validations[next] || (style !== otherStyle && book.styles[otherStyle].includes('background-color:'))) break;
-          end++;
-        }
-        if (end === c + 1) continue;
-        notes.add(address);
-        mergeStarts.set(address, [1, end - c]);
-        for (let blank = c + 1; blank < end; blank++) covered.add(column(blank) + r);
-      }
-    }
-    const conditional = sheet.conditional.map(([area, ...rule]) => [new Set(range(area).flat()), ...rule]);
-    function currentValue(address) {
-      try { return read(name, address); } catch (error) { return error.message; }
-    }
-    const updates = [];
-    function edit(entry, value) {
-      entry[0] = value;
-      read = calculate(book);
-      for (const update of updates) update();
-    }
-    for (let r = scorecard ? 1 : 0; r < heights.length; r++) {
-      const row = table.insertRow();
-      row.style.height = heights[r] + 'px';
-      for (let c = 0; c < widths.length; c++) {
-        const addr = column(c) + r;
-        if (covered.has(addr)) continue;
-        const cell = el(r && c ? 'td' : 'th');
-        if (r && c) {
-          const entry = sheet.cells[addr], [saved, style, ast, fmt, note] = entry;
-          cell.style.cssText = book.styles[style];
-          if (scorecard && r === 5) cell.style.backgroundColor = '#2c3a55';
-          if (scorecard && cell.style.backgroundColor === 'rgb(255, 243, 206)') cell.style.backgroundColor = '#fcf3d1';
-          cell.dataset.address = addr;
-          if (mergeStarts.has(addr)) [cell.rowSpan, cell.colSpan] = mergeStarts.get(addr);
-          if (note) cell.title = note;
-          const options = sheet.validations[addr];
-          const label = name + ' ' + addr;
-          if (ast?.[0] === 'HYPERLINK') {
-            const [target, targetCell] = locationOf(ast[1].slice(1), name);
-            const link = el('a', ast[2]);
-            link.href = '#' + encodeURIComponent(target) + '!' + targetCell;
-            cell.append(link);
-          } else if (ast) {
-            const initialBackground = cell.style.backgroundColor, initialColor = cell.style.color;
-            const update = () => {
-              const value = currentValue(addr);
-              cell.textContent = formatted(value, fmt);
-              if (scorecard && r >= 6 && (c === 18 || c === 21) && typeof value === 'string') {
-                const status = value.split(' ', 1)[0].toLowerCase();
-                if ((c === 18 && ['low', 'moderate', 'high', 'critical'].includes(status)) ||
-                    (c === 21 && ['hold', 'stop'].includes(status))) {
-                  const badge = el('span', cell.textContent);
-                  badge.className = 'risk-result ' + status;
-                  cell.replaceChildren(badge);
-                }
-              }
-              cell.style.textAlign = cell.style.textAlign || (isNumber(value) ? 'right' : '');
-              const rule = conditional.find(([area, type, match]) => area.has(addr) &&
-                (type === 'cellIs' ? value === match : String(value).includes(match)));
-              cell.style.backgroundColor = rule?.[3] || initialBackground;
-              cell.style.color = rule?.[4] || initialColor;
-            };
-            update();
-            updates.push(update);
-          } else if (Array.isArray(options)) {
-            const choice = el('div');
-            choice.className = 'choice';
-            const display = el('span', formatted(saved, fmt));
-            display.setAttribute('aria-hidden', 'true');
-            const select = el('select');
-            select.setAttribute('aria-label', label);
-            const entries = [null, ...options];
-            if (!entries.includes(saved)) entries.push(saved);
-            entries.forEach((v, i) => { const option = el('option', formatted(v, fmt)); option.value = i; select.append(option); });
-            select.value = String(entries.indexOf(saved));
-            select.addEventListener('change', () => {
-              const value = entries[select.value];
-              display.textContent = formatted(value, fmt);
-              edit(entry, value);
-            });
-            choice.append(display, select);
-            cell.append(choice);
-          } else {
-            const content = el('div', formatted(saved, fmt));
-            if (isNumber(saved) && !cell.style.textAlign) cell.style.textAlign = 'right';
-            cell.append(content);
-            if (notes.has(addr)) {
-              content.classList.add('note-text');
-              content.style.maxWidth = Math.max(widths[c], sheetView.clientWidth - widths[0] - 12) + 'px';
-              if (c < frozenX && c + cell.colSpan > frozenX) {
-                content.classList.add('sticky-note');
-                content.style.left = prefix(widths, c) + 'px';
-              }
-            }
-          }
-        } else if (!scorecard) cell.textContent = r || column(c);
-        if (r < frozenY || c < frozenX) {
-          cell.classList.add('pinned');
-          if (r < frozenY) cell.style.top = prefix(heights, r) + 'px';
-          if (c < frozenX && !cell.querySelector('.sticky-note')) cell.style.left = prefix(widths, c) + 'px';
-          if (r < frozenY && c < frozenX) cell.classList.add('both');
-          if (frozenY > 1 && r === frozenY - 1) cell.classList.add('freeze-bottom');
-        }
-        row.append(cell);
-      }
-    }
-    sheetView.replaceChildren(table);
-    let top = 0;
-    for (const row of table.rows) {
-      const r = row.rowIndex + (scorecard ? 1 : 0);
-      if (r >= frozenY) break;
-      for (const cell of row.cells) {
-        if (cell.classList.contains('pinned')) cell.style.top = top + 'px';
-      }
-      top += row.getBoundingClientRect().height;
-    }
-    divider.hidden = false;
-    divider.style.left = prefix(widths, frozenX) + 'px';
-    divider.style.height = sheetView.clientHeight + 'px';
-    [sheetView.scrollLeft, sheetView.scrollTop] = positions.get(name) || [0, 0];
-    if (destination) {
-      const cell = table.querySelector('[data-address="' + destination + '"]');
-      if (cell) {
-        cell.tabIndex = -1;
-        cell.style.scrollMarginTop = top + 'px';
-        cell.style.scrollMarginLeft = prefix(widths, frozenX) + 'px';
-        cell.scrollIntoView({block: 'nearest', inline: 'nearest'});
-        cell.focus({preventScroll: true});
-      }
-    }
+  const focusAssessment = mountAssessment(book);
+  function followLegacyLink() {
+    const address = /^#Scorecard!([A-Z]+[0-9]+)$/.exec(location.hash)?.[1];
+    if (address) focusAssessment(address);
   }
-  function navigate() {
-    const [encoded, addr] = window.location.hash.slice(1).split('!');
-    let name;
-    try { name = decodeURIComponent(encoded); } catch { name = book.active; }
-    const isAssessment = !name || name === 'assessment' || name === 'Scorecard';
-    document.querySelector('#assessment').hidden = !isAssessment;
-    document.querySelector('#references').hidden = isAssessment;
-    for (const link of document.querySelectorAll('.mode-bar a')) {
-      if ((link.hash === '#assessment') === isAssessment) link.setAttribute('aria-current','page');
-      else link.removeAttribute('aria-current');
-    }
-    if (name === 'Scorecard') focusAssessment(addr);
-    if (!isAssessment) show(Object.hasOwn(book.sheets, name) && tabs.has(name) ? name : 'Guide', /^[A-Z]+\d+$/.test(addr || '') ? addr : null);
-  }
-  for (const name of Object.keys(book.sheets)) {
-    if (name === 'Scorecard') continue;
-    const button = el('button', name);
-    button.type = 'button';
-    button.setAttribute('role', 'tab');
-    button.addEventListener('click', () => {
-      if (location.hash === '#' + encodeURIComponent(name)) show(name);
-      else location.hash = encodeURIComponent(name);
-    });
-    tabs.set(name, button);
-    nav.append(button);
-  }
-  window.addEventListener('hashchange', navigate);
-  window.addEventListener('resize', () => { if (current && !document.querySelector('#references').hidden) show(current); });
-  navigate();
+  window.addEventListener('hashchange',followLegacyLink);
+  followLegacyLink();
 }
 if (typeof document !== 'undefined') {
   unpack(document.querySelector('#workbook').textContent).then(launch).catch(error => {
