@@ -75,11 +75,25 @@
   #assessment[hidden], #references[hidden] { display:none }
   #references { flex:1; min-height:0; display:grid; grid-template-rows:minmax(0,1fr) auto; padding:12px; gap:10px }
   .assessment-layout { max-width:1200px; margin:auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:22px; align-items:start }
+  .assessment-intro { grid-column:1/-1; border:1px solid #315b70; border-radius:16px;
+    padding:22px clamp(16px,3vw,32px); color:#fff; background:linear-gradient(112deg,#162840,#244564 68%,#176361); }
+  .assessment-intro h2 { font-size:clamp(24px,4vw,36px); letter-spacing:-.025em; margin-bottom:6px }
+  .assessment-intro > p { max-width:70ch; color:#e1edf4; margin:0 }
+  .assessment-intro ul { list-style:none; padding:0; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:17px 0 12px }
+  .assessment-intro li { border:1px solid #d7f1f755; border-radius:10px; padding:11px 13px; background:#ffffff12 }
+  .assessment-intro li span { display:block; margin-top:4px; color:#e4f3f5; line-height:1.35 }
+  .assessment-about { color:#def9f4 }
+  .assessment-about summary { cursor:pointer }
+  .assessment-about a { color:#c4fff4 }
   .assessment-layout h2,.assessment-layout h3 { margin:0 0 12px }
   .assessment-layout p { line-height:1.5 }
   .assessment-side,.assessment-card { min-width:0; padding:18px; border:1px solid var(--line); border-radius:14px; background:white; box-shadow:0 5px 18px #17263c0c }
   .step-list { display:grid; gap:3px; margin-top:16px }
   .step-list button { text-align:left; white-space:normal; padding:8px; }
+  .step-list button { display:flex; align-items:center; gap:8px }
+  .step-number { display:grid; place-items:center; flex:0 0 24px; height:24px; border-radius:50%; background:#e9eff5; color:#375770 }
+  .step-list button[aria-current] .step-number { background:#00695f; color:white }
+  .step-counter,.result-case { font-weight:700; color:#375770 }
   .step-list button[aria-current] { background:#dcf3eb; color:#065c53 }
   .assessment-side select,.answer select,.answer input,.answer textarea { display:block; width:100%; border:1px solid #a8baca; border-radius:8px; background:#fff; color:var(--ink); padding:9px; font:inherit }
   .assessment-side label,.answer label { display:block; margin-bottom:6px; font-weight:700 }
@@ -100,7 +114,7 @@
   .result-box dd { margin:5px 0 0 }
   .period { margin-top:12px; padding:12px; border:1px solid var(--line); border-radius:10px }
   .period > .answer-grid { margin-top:12px }
-  @media(max-width:720px) { .assessment-layout,.answer-grid,.result-grid { grid-template-columns:1fr } .step-list { grid-template-columns:repeat(2,minmax(0,1fr)) } .credits { font-size:12px } }
+  @media(max-width:720px) { .assessment-layout,.answer-grid,.result-grid,.assessment-intro ul { grid-template-columns:1fr } .step-list { grid-template-columns:repeat(2,minmax(0,1fr)) } .credits { font-size:12px } }
   @media print { .mode-bar,.assessment-side,.assessment-footer { display:none } main,#assessment { display:block; height:auto; overflow:visible } .assessment-layout { display:block } }
 </style>
 <main>
@@ -1847,12 +1861,15 @@ function mountAssessment(source) {
     [['Actions', 'A C D E F G H I J K L']]
   ];
   const resultSets = [
-    [['Scorecard', 'L M Q R S U'], ['Intake', 'AB AE W X']],
+    [['Scorecard', 'L M Q R S U Z AA AB'], ['Intake', 'AB AE X']],
     [['Scorecard', 'AK AL AM AN AO AP AQ'], ['Readiness', 'S T']],
     [['ROI 3yr', 'G H I J K M']]
   ];
   const dateFields = new Set(['Scorecard!X','Intake!J','Readiness!O','ROI 3yr!C','Actions!F','Actions!K','Actions!L']);
   const numericFields = new Set(['Intake!K','Intake!Y','Intake!AA','ROI 3yr!L']);
+  const formStepByColumn = new Map(fieldSets.flatMap((groups,i)=>groups
+    .filter(([name])=>name==='Scorecard')
+    .flatMap(([,cols])=>cols.split(' ').map(col=>[col,i]))));
   const studies = new Map();
   let active = 'new', step = 0;
   const el = (tag, value, cls) => {
@@ -1883,7 +1900,8 @@ function mountAssessment(source) {
   }
   function guideFor(sheet,col,headerRow) {
     const {guideRow} = header(sheet,col,headerRow);
-    if (!guideRow) return null;
+    const note = sheets[sheet].cells[col+(headerRow||5)]?.[4];
+    if (!guideRow && !note) return null;
     const details = el('details');
     details.append(el('summary','Field help'));
     const guide = sheets['Field Guide'].cells;
@@ -1895,6 +1913,7 @@ function mountAssessment(source) {
         details.append(line);
       }
     }
+    if(note) details.append(el('p',note.replace(/^======.*?\)\s*/s,'')));
     return details;
   }
   function optionHelp(sheet,col,value) {
@@ -1910,6 +1929,25 @@ function mountAssessment(source) {
     return '';
   }
   const layout = el('div',undefined,'assessment-layout');
+  const intro = el('section',undefined,'assessment-intro');
+  intro.append(el('h2','Assess an AI use case'),el('p','Answer questions about how the system will be used, who it affects, and what safeguards are in place. The scorecard calculates a risk tier and recommends what to do next.'));
+  const introPoints = el('ul');
+  for(const [title,copy] of [
+    ['Risk and safeguards','Rate eight risk dimensions and check policy overrides.'],
+    ['Readiness and economics','Assess privacy, security, adoption, operations, and three-year ROI.'],
+    ['Results and follow-up','See the review route, relevant controls, and gaps to resolve.']
+  ]) {
+    const item=el('li');
+    item.append(el('strong',title),el('span',copy));
+    introPoints.append(item);
+  }
+  const about=el('details',undefined,'assessment-about');
+  about.append(el('summary','About this scorecard'));
+  for(const addr of ['A1','A2','A3','A4']) about.append(el('p',sheets.Scorecard.cells[addr][0]));
+  const gettingStarted = el('a','Read the full Guide');
+  gettingStarted.href='#Guide';
+  about.append(gettingStarted);
+  intro.append(introPoints,about);
   const sidebar = el('aside',undefined,'assessment-side');
   const page = el('div',undefined,'assessment-card');
   const progress = el('div',undefined,'step-list');
@@ -1923,8 +1961,9 @@ function mountAssessment(source) {
   picker.addEventListener('change',()=>{ active=picker.value; go(active==='new'?0:6); });
   const pickerLabel = el('label','Assessment or example');
   pickerLabel.htmlFor = picker.id;
-  sidebar.append(pickerLabel,picker,progress,el('p','Answers stay in this browser tab and reset on refresh. Use the results page to print or download the assessment.'));
-  layout.append(sidebar,page);
+  const stepCounter=el('p',undefined,'step-counter');
+  sidebar.append(pickerLabel,picker,stepCounter,progress,el('p','Answers stay in this browser tab and reset on refresh. Print or download your results to keep a copy.'));
+  layout.append(intro,sidebar,page);
   host.replaceChildren(layout);
   let resultPreview;
   function go(next) {
@@ -2007,7 +2046,7 @@ function mountAssessment(source) {
     const list=el('dl',undefined,'result-grid');
     for(const [label,value] of pairs) {
       const item=el('div',undefined,'result-box');
-      item.append(el('dt',label),el('dd',value||'—'));
+      item.append(el('dt',label),el('dd',value===''||value==null?'—':value));
       list.append(item);
     }
     return list;
@@ -2039,8 +2078,11 @@ function mountAssessment(source) {
   }
   function render() {
     const {book,row}=study();
+    intro.hidden=step!==0;
+    stepCounter.textContent='Step '+(step+1)+' of '+steps.length;
     progress.replaceChildren(...steps.map(([title],i)=>{
-      const item=button((i+1)+'. '+title,()=>go(i));
+      const item=button('',()=>go(i));
+      item.append(el('span',String(i+1),'step-number'),el('span',title));
       if(i===step) item.setAttribute('aria-current','step');
       return item;
     }));
@@ -2079,6 +2121,8 @@ function mountAssessment(source) {
     }
     if(step===6) {
       const read=calculate(book);
+      const name=read('Scorecard','B'+row), id=read('Scorecard','A'+row);
+      if(name||id) page.append(el('p',[id,name].filter(Boolean).join(' · '),'result-case'));
       if(!read('Scorecard','A'+row)) page.append(button('Enter case details',()=>go(0),'assessment-primary'));
       for(const [i,label] of ['Risk and intake','Privacy, security and readiness','Financial assessment'].entries()) {
         page.append(el('h3',label),tiles(readResults(resultSets[i])));
@@ -2089,6 +2133,10 @@ function mountAssessment(source) {
           read('Controls','A'+(20+i)),read('Controls',column(tier+1)+(20+i))
         ])));
       }
+      const breakdown=el('details',undefined,'period');
+      breakdown.append(el('summary','See the eight scores behind the weighted result'),
+        tiles(readResults([['Scorecard','AC AD AE AF AG AH AI AJ']])));
+      page.append(breakdown);
       const guidance=el('details',undefined,'period');
       guidance.append(el('summary','Framework status and outstanding decisions'));
       for(const i of [54,55,56]) guidance.append(el('p',read('Guide','B'+i)));
@@ -2102,10 +2150,18 @@ function mountAssessment(source) {
     page.append(footer);
   }
   render();
+  return address=>{
+    if(!address) return;
+    const col=/^[A-Z]+/.exec(address)?.[0];
+    go(formStepByColumn.get(col)??6);
+    const input=document.getElementById('answer-Scorecard-'+col+study().row);
+    if(input) input.focus();
+    else if(index(col??'')>=29 && index(col??'')<=36) page.querySelector('.period').open=true;
+  };
 }
 
 function launch(book) {
-  mountAssessment(structuredClone(book));
+  const focusAssessment = mountAssessment(structuredClone(book));
   const sheetView = document.querySelector('#sheet');
   const divider = document.querySelector('#pane-divider');
   const nav = document.querySelector('nav');
@@ -2334,16 +2390,18 @@ function launch(book) {
     const [encoded, addr] = window.location.hash.slice(1).split('!');
     let name;
     try { name = decodeURIComponent(encoded); } catch { name = book.active; }
-    const isAssessment = !name || name === 'assessment';
+    const isAssessment = !name || name === 'assessment' || name === 'Scorecard';
     document.querySelector('#assessment').hidden = !isAssessment;
     document.querySelector('#references').hidden = isAssessment;
     for (const link of document.querySelectorAll('.mode-bar a')) {
       if ((link.hash === '#assessment') === isAssessment) link.setAttribute('aria-current','page');
       else link.removeAttribute('aria-current');
     }
-    if (!isAssessment) show(Object.hasOwn(book.sheets, name) ? name : book.active, /^[A-Z]+\d+$/.test(addr || '') ? addr : null);
+    if (name === 'Scorecard') focusAssessment(addr);
+    if (!isAssessment) show(Object.hasOwn(book.sheets, name) && tabs.has(name) ? name : 'Guide', /^[A-Z]+\d+$/.test(addr || '') ? addr : null);
   }
   for (const name of Object.keys(book.sheets)) {
+    if (name === 'Scorecard') continue;
     const button = el('button', name);
     button.type = 'button';
     button.setAttribute('role', 'tab');
