@@ -53,6 +53,22 @@
   .answer,.result-box { min-width:0; overflow-wrap:anywhere }
   .answer { padding:12px; border:1px solid #e2eaf0; border-radius:10px }
   .option-meaning { color:#355465; margin:6px 0 0; font-size:15px }
+  .start-actions,.result-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px }
+  .start-actions button { background:#e3faf4; color:#07554c }
+  .start-actions .assessment-primary { background:white; color:#153852 }
+  .start-actions button:hover { background:#bddfd9; color:#123e3b }
+  .choice-cards { display:grid; gap:7px; border:0; padding:0; margin:0; min-inline-size:0 }
+  .choice-cards legend { font-weight:700; margin-bottom:9px; padding:0 }
+  .answer .choice-card { display:flex; gap:9px; align-items:flex-start; margin:0; padding:9px 11px;
+    border:1px solid #a8baca; border-radius:8px; cursor:pointer; font-weight:400 }
+  .answer .choice-card:hover { background:#f0f8f8; border-color:#08786b }
+  .answer .choice-card:has(:checked) { background:#e1f6ef; border-color:#08786b; box-shadow:inset 0 0 0 1px #08786b }
+  .answer .choice-card input { width:17px; height:17px; flex:none; margin:4px 0 0; accent-color:#00695f }
+  .clear-answer { padding:4px 0; font-size:14px; text-decoration:underline }
+  .clear-answer:hover { background:transparent }
+  .assessment-callout[data-status="stop"] { border-color:#ad3041; background:#fff0f1; color:#842136 }
+  .assessment-callout[data-status="hold"] { border-color:#a56905; background:#fff5dd; color:#64420a }
+  .question-group summary { color:#204964 }
   .assessment-footer { display:flex; gap:8px; justify-content:space-between; flex-wrap:wrap; margin-top:20px }
   .assessment-primary { background:#00695f; color:white }
   .assessment-primary:hover { background:#00574e; color:white }
@@ -1911,6 +1927,17 @@ function mountAssessment(source) {
     if(id && name) picker.append(new Option(id + ' · ' + name,String(r)));
   }
   picker.addEventListener('change',()=>{ active=picker.value; go(active==='new'?0:6); });
+  const startActions=el('div',undefined,'start-actions');
+  startActions.append(
+    button('Start an assessment',()=>{
+      picker.value='new';
+      active='new';
+      go(0);
+      document.getElementById('answer-Scorecard-A'+study().row)?.focus();
+    },'assessment-primary'),
+    button('Try a worked example',()=>{ picker.value='6'; active='6'; go(6); })
+  );
+  intro.append(startActions);
   const pickerLabel = el('label','Assessment or example');
   pickerLabel.htmlFor = picker.id;
   const stepCounter=el('p',undefined,'step-counter');
@@ -1936,6 +1963,7 @@ function mountAssessment(source) {
     const isNumberInput = options==='nonnegative' || numericFields.has(key);
     const isPercentage = key==='ROI 3yr!L';
     const select = Array.isArray(options);
+    const useCards = select && sheet==='Scorecard' && ['D','E','F','G','H','I','J','K','N','O','P','T'].includes(col);
     const input = el(select?'select':isDate||isNumberInput||key==='Scorecard!A'?'input':'textarea');
     input.id = 'answer-' + sheet.replace(/\W/g,'-')+'-'+col+row;
     caption.htmlFor = input.id;
@@ -1974,7 +2002,31 @@ function mountAssessment(source) {
       hint.hidden=!hint.textContent;
       resultPreview?.();
     });
-    shell.append(caption,input,hint);
+    if(useCards) {
+      const choices=el('fieldset',undefined,'choice-cards');
+      choices.append(el('legend',caption.textContent));
+      for(const [i,value] of options.entries()) {
+        const card=el('label',undefined,'choice-card');
+        const radio=el('input');
+        radio.type='radio';
+        radio.name=input.id;
+        radio.value=String(i);
+        if(i===0) radio.id=input.id;
+        radio.checked=input.value===radio.value;
+        radio.addEventListener('change',()=>{
+          input.value=radio.value;
+          input.dispatchEvent(new Event('change'));
+        });
+        card.append(radio,el('span',String(value)));
+        choices.append(card);
+      }
+      shell.append(choices,button('Clear answer',()=>{
+        for(const radio of choices.querySelectorAll('input')) radio.checked=false;
+        input.value='';
+        input.dispatchEvent(new Event('change'));
+        choices.querySelector('input').focus();
+      },'clear-answer'),hint);
+    } else shell.append(caption,input,hint);
     const help=guideFor(sheet,col,headerRow);
     if(help) shell.append(help);
     if (sheet==='Scorecard' && index(col)>=4 && index(col)<=11 && active!=='new') {
@@ -2065,10 +2117,15 @@ function mountAssessment(source) {
         (value||'Enter a case ID and complete the risk questions to get a route.')+
         ((step===1||step===3)&&isNumber(population)?' · Suggested population score '+population:'');
       if(live.textContent!==message) live.textContent=message;
+      live.dataset.status=String(value).startsWith('STOP')?'stop':String(value).startsWith('HOLD')?'hold':'';
     };
     resultPreview();
     page.replaceChildren(heading,el('p',steps[step][1]),live);
     const groups = {
+      1: [['Decision impact and affected population','Scorecard','D E'],
+          ['Data sensitivity and regulatory exposure','Scorecard','F G'],
+          ['Financial impact and autonomy','Scorecard','H I'],
+          ['Explainability and reputation','Scorecard','J K']],
       2: [['Policy checks and overrides','Scorecard','N O P T'],
           ['Safeguards and accountability','Intake','H I O P Q R S T U V'],
           ['Assessment record','Scorecard','V W X Y']],
@@ -2080,9 +2137,10 @@ function mountAssessment(source) {
           ['Operations','Readiness','H I J K L'],['Review evidence','Readiness','M N O']]
     }[step];
     if(groups) {
-      for(const [label,sheet,cols] of groups) {
-        const group=el('section',undefined,'period');
-        group.append(el('h3',label),gridFor([[sheet,cols]],row));
+      for(const [i,[label,sheet,cols]] of groups.entries()) {
+        const group=el('details',undefined,'period question-group');
+        group.open=i===0;
+        group.append(el('summary',label),gridFor([[sheet,cols]],row));
         page.append(group);
       }
     } else if(fieldSets[step].length) page.append(gridFor(fieldSets[step],row));
@@ -2100,11 +2158,22 @@ function mountAssessment(source) {
       const read=calculate(book);
       const name=read('Scorecard','B'+row), id=read('Scorecard','A'+row);
       if(name||id) page.append(el('p',[id,name].filter(Boolean).join(' · '),'result-case'));
-      if(!read('Scorecard','A'+row)) page.append(button('Enter case details',()=>go(0),'assessment-primary'));
-      for(const [i,label] of ['Risk and intake','Privacy, security and readiness','Financial assessment'].entries()) {
-        page.append(el('h3',label),tiles(readResults(resultSets[i])));
-      }
       const tier=read('Scorecard','Q'+row);
+      page.append(tiles([
+        ['Final risk tier',isNumber(tier)?'Tier '+tier+' · '+read('Scorecard','R'+row):'Awaiting answers'],
+        ['Proposed reviewer',read('Scorecard','S'+row)]
+      ]));
+      const resultActions=el('div',undefined,'result-actions');
+      resultActions.append(button(id?'Edit answers':'Enter case details',()=>go(0),'assessment-primary'));
+      if(!isNumber(read('Scorecard','L'+row))) resultActions.append(button('Review risk ratings',()=>go(1)));
+      if(!isNumber(tier)) resultActions.append(button('Review policy answers',()=>go(2)));
+      page.append(resultActions);
+      for(const [i,label] of ['Risk and intake','Privacy, security and readiness','Financial assessment'].entries()) {
+        const detail=el('details',undefined,'period');
+        detail.open=i===0;
+        detail.append(el('summary',label),tiles(readResults(resultSets[i])));
+        page.append(detail);
+      }
       if(isNumber(tier)&&tier>=1&&tier<=4) {
         page.append(el('h3','Tier '+tier+' controls'),tiles(Array.from({length:7},(_,i)=>[
           read('Controls','A'+(20+i)),read('Controls',column(tier+1)+(20+i))
@@ -2132,8 +2201,13 @@ function mountAssessment(source) {
     const col=/^[A-Z]+/.exec(address)?.[0];
     go(formStepByColumn.get(col)??6);
     const input=document.getElementById('answer-Scorecard-'+col+study().row);
-    if(input) input.focus();
-    else if(index(col??'')>=29 && index(col??'')<=36) page.querySelector('.period').open=true;
+    if(input) {
+      const group=input.closest('details');
+      if(group) group.open=true;
+      input.focus();
+    } else if(index(col??'')>=29 && index(col??'')<=36) {
+      [...page.querySelectorAll('summary')].find(summary=>summary.textContent.startsWith('See the eight scores')).parentElement.open=true;
+    }
   };
 }
 
