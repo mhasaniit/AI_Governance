@@ -1,121 +1,57 @@
 # Rules for Using AI and Protecting Customer Data
 
-A Northwestern FORGE capstone project focused on helping business leaders set clear rules for responsible AI use and customer data protection.
+A Northwestern FORGE capstone project that helps organizations review AI use cases, protect customer data, and decide what safeguards and human oversight each use case needs.
 
-## Project Overview
+[Open the AI Use Case Risk Scorecard](https://mhasaniit.github.io/AI_Governance/)
 
-This project develops a practical governance model for how an organization selects, approves, deploys, and monitors AI.
+## The problem we set out to solve
 
-The model helps leaders assess risk, decide what oversight is needed, and assign responsibility. Customer data protection is a central focus, along with privacy, security, bias, intellectual property, and other obligations that apply to each AI use.
+When teams review AI proposals independently, similar use cases can receive different levels of scrutiny. Ownership can also become unclear once an AI tool is deployed. We set out to give business leaders, use case owners, and reviewers a shared process for answering four questions.
 
-## The Problem
+- What problem does this use of AI solve, and who could be affected?
+- What data does it use, and what risks and obligations apply?
+- What approvals, safeguards, and human review does it need?
+- Who owns the decision, handles concerns, and monitors the use after approval?
 
-Business leaders need a consistent way to review AI use and answer questions such as:
+The project covers predictive machine learning, generative AI, and agentic AI. Customer data protection is a central focus, alongside privacy, security, fairness, and intellectual property.
 
-* Which AI uses need additional oversight?
-* How should risks be grouped and scored?
-* What approvals, safeguards, and human review are needed?
-* Who makes decisions and handles concerns?
-* How should AI be monitored after approval?
+## What we made
 
-Without a shared process, teams may make different decisions about similar risks or leave responsibilities unclear.
-
-## Project Goal
-
-Create a usable governance model that helps leaders make consistent and transparent decisions about AI risk, ownership, approval, and ongoing oversight.
-
-## Who It Is For
-
-The model is intended for business leaders and the people responsible for reviewing, approving, and overseeing AI use within an organization.
-
-## Planned Work
-
-The capstone brief identifies the following work:
-
-* Research existing approaches to AI governance.
-* Define AI risk tiers.
-* Design a process for submitting and approving AI use cases.
-* Identify who makes decisions and who handles concerns.
-* Test the model against representative AI use cases.
-
-## Proposed Deliverables
-
-The capstone brief lists these as sample deliverables. The team may adjust them as the project scope is agreed upon.
-
-| Deliverable | Purpose |
+| Deliverable | What it does |
 | --- | --- |
-| Governance framework | Explain how AI is selected, approved, deployed, and monitored. |
-| Risk scorecard | Help teams group AI use cases by risk and determine the level of review needed. |
-| Submission and approval process | Define how AI proposals are submitted, reviewed, and approved. |
-| Roles and decision responsibilities | Identify who owns decisions, approvals, and concerns. |
-| Policy and safeguards guidance | Describe rules and safeguards for responsible AI use. |
-| Monitoring approach | Explain how teams review AI use and address concerns over time. |
+| **Interactive AI Use Case Risk Scorecard** | Guides users through an assessment, calculates a risk tier, and generates a report with a recommended next action. |
+| **Risk assessment workbook** | Documents the scoring rubric, policy checks, suggested controls, evidence requirements, and worked examples. It also covers adoption readiness, operational readiness, and a three-year ROI estimate. |
+| **AI intake and review process** | Connects the initial proposal to review and approval. It helps teams assign owners, document decisions, track safeguards, and plan follow-up reviews. |
+| **Draft Responsible Use of AI Policy** | Gives organizations a baseline they can adapt for approved tools, customer and company data protection, human oversight, fairness, transparency, and escalation. |
 
-## Additions in the Team Draft
+## Try the scorecard
 
-Our initial project draft also proposes:
+Start a new assessment or open a worked example. The form starts with the problem you want to solve and guides you through eight risk factors, including decision impact, affected population, data sensitivity, and AI autonomy.
 
-* A responsible use policy.
-* A gap analysis of CGI’s Responsible Use of AI policy.
-* An interactive risk scorecard.
+The scorecard assigns a tier from **Low** to **Critical** and flags conditions that call for additional review, a hold, or a stop. The report helps reviewers see what drove the result, what evidence is still needed, and which safeguards to consider. Approval remains with the designated reviewers.
 
-The capstone brief supports policy guidance and a risk scorecard. It does not specifically require a CGI policy gap analysis or an interactive format. These are proposed additions from the team’s draft.
+Try the **Customer support chatbot** example to see how sending personal or regulated data to an external AI service can affect the risk tier and recommended next action.
 
-The gap analysis is intended to identify possible areas for improvement. It does not assume that weaknesses have already been found.
+## Research and data rules
 
-## Data and Research Rules
+The capstone draws on public AI governance guidance, approved research materials, and synthetic use cases. The team’s research explored chatbot privacy, data classification, platform safeguards, access and retention controls, and human oversight.
 
-The capstone brief calls for:
+The capstone calls for a Northwestern-approved AI or development environment and separate approval for access to production systems. Organizations adapting the materials should apply their own data rules, approval processes, and contractual obligations. CGI-specific policy references provide context for CGI assessments.
 
-* Public governance guidance.
-* Synthetic AI use cases.
-* Approved research materials.
-* A Northwestern approved AI or development environment.
+## How we propose to evaluate the model
 
-Public or synthetic data should be used whenever possible. Production systems require separate approval.
+The proposed evaluation uses representative cases to see whether reviewers reach consistent decisions about risk and oversight, identify the approvals and safeguards needed, assign clear ownership, and document how each use case will be monitored.
 
-The model should consider privacy, security, intellectual property, bias, employment, and industry specific obligations where relevant.
+The capstone also includes an Amazon-style press release that explains the problem and the proposed solution from the perspective of a future launch. The draft uses hypothetical quotes to illustrate the intended experience.
 
-## How the Model Will Be Evaluated
+## The team
 
-The team will test the model against representative AI use cases to assess whether it helps leaders:
+**Produced by:** Chidambara Raja G, Sabrina Arshad, Hafsa Nauman, Mustafa Hasan, and Lailoma Nabizada.
 
-* Make consistent decisions about risk.
-* Identify the approvals and safeguards needed.
-* Assign clear responsibility.
-* Determine when human oversight is needed.
-* Plan for ongoing monitoring.
+**In collaboration with CGI colleagues:** Robert Springer, Gabriella Martin, and Muhammed Aslem Painayil Abdul Jabbar.
 
-These are intended outcomes, not claims of completed testing or proven results.
+This project is part of Northwestern FORGE, the Northwestern Network for Collaborative Intelligence’s hub for applied experimentation. CGI is a FORGE Foundry Partner.
 
-## Project Scope
+## License
 
-Before building and testing the model, the team will agree on:
-
-* The AI use cases to review.
-* The risk categories to use.
-* The policy areas to include.
-* The governance decisions the model should support.
-* The final deliverables.
-
-## Press Release
-
-The project also includes an Amazon style press release based on the FORGE assignment guide.
-
-The press release describes the project as though it were a completed product and includes:
-
-* Heading.
-* Subheading.
-* Summary.
-* Problem.
-* Solution.
-* Team spokesperson quote.
-* Hypothetical customer quote.
-
-Draft quotes are examples, not statements from actual customers or approved spokespersons. The completed product writing style does not mean the project has already been delivered.
-
-## Project Background
-
-This project is part of Northwestern FORGE, the Northwestern Network for Collaborative Intelligence’s hub for applied experimentation.
-
-CGI is a Foundry Partner of the FORGE program. The program brings students, faculty, and industry experts together to work on practical problems involving AI and other fields.
+See the repository’s [license](LICENSE).
